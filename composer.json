@@ -1,0 +1,31 @@
+{
+    "name": "novosga/novosga",
+    "type": "project",
+    "description": "Sistema de Gerenciamento de Atendimento",
+    "keywords": ["sga", "atendimento", "fila", "gerenciamento", "controle"],
+    "homepage": "http://www.novosga.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rogério Alencar Lino Filho", 
+            "email": "rogeriolino@gmail.com",
+            "homepage": "http://rogeriolino.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.9",
+        "slim/slim": "2.4.3",
+        "slim/views": "0.1.2",
+        "twig/twig": "1.15.1",
+        "twig/extensions": "1.0.1",
+        "doctrine/orm": "*",
+        "bshaffer/oauth2-server-php": "v1.5"
+    },
+    "autoload": {
+        "psr-0": {
+            "Novosga\\": "src/",
+            "modules\\": "./"
+        }
+    }
+}

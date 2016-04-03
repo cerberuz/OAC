@@ -1,0 +1,135 @@
+{% extends "module.html.twig" %}
+
+{% block head %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ resources('css/bootstrap-switch.min.css', module.chave) }}">
+    <script type="text/javascript" src="{{ resources('js/bootstrap-switch.min.js', module.chave) }}"></script>
+{% endblock %}
+
+{% block content %}
+<div>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab-servicos" data-toggle="tab">{% trans %}Servicios{% endtrans %}</a></li>
+        <li><a href="#tab-triagem" data-toggle="tab">{% trans %}Triage{% endtrans %}</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="tab-servicos" class="tab-pane active">
+            <p>{% trans %}Las modificaciones en la inicial y nombre del servicio se guardan automaticamente al salir del campo.{% endtrans %}</p>
+            <table class="table" id="servicos">
+                <thead>
+                    <tr>
+                        <th>{% trans %}Inicial{% endtrans %}</th>
+                        <th>{% trans %}Servicio{% endtrans %}</th>
+                        <th class="col-md-2">{% trans %}Local{% endtrans %}</th>
+                        <th>{% trans %}Status{% endtrans %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for su in servicos %}
+                    <tr>
+                        <td class="sigla">
+                            <input id="sigla-{{ su.servico.id }}" 
+                                   type="text" 
+                                   class="servico-{{ su.servico.id }} center form-control" 
+                                   value="{{ su.sigla }}" 
+                                   data-id="{{ su.servico.id }}" 
+                                   onclick="this.select()" 
+                                   onkeyup="this.value = this.value.toUpperCase()" 
+                                   onblur="SGA.Unidade.Servicos.change({{ su.servico.id }})"
+                                   size="1"
+                                   maxlength="1" 
+                                   {% if su.status != 1 %}disabled="disabled"{% endif %} />
+                        </td>
+                        <td class="nome">
+                            <div class="input-group">
+                                <input id="nome-{{ su.servico.id }}" 
+                                       type="text" 
+                                       class="servico-{{ su.servico.id }} center form-control" 
+                                       value="{{ su.nome }}" 
+                                       data-id="{{ su.servico.id }}" 
+                                       onchange="SGA.Unidade.Servicos.change({{ su.servico.id }})"
+                                       maxlength="50" 
+                                       {% if su.status != 1 %}disabled="disabled"{% endif %} />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default servico-{{ su.servico.id }}"
+                                            onclick="SGA.Unidade.Servicos.reverteNome({{ su.servico.id }})"
+                                            title="Reverter nome para nome original"
+                                            {% if su.status != 1 %}disabled="disabled"{% endif %}>
+                                        <span class="glyphicon glyphicon-refresh"></span>
+                                    </button>
+                                </span>
+                            </div>
+                        </td>
+                        <td class="local">
+                            <select id="local-{{ su.servico.id }}" 
+                                    class="servico-{{ su.servico.id }} form-control" 
+                                    onchange="SGA.Unidade.Servicos.change({{ su.servico.id }})" 
+                                    {% if su.status != 1 %}disabled="disabled"{% endif %}>
+                                {% for local in locais %}
+                                <option value="{{ local.id }}" {% if su.local.id == local.id %}selected="selected"{% endif %}>{{ local.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td style="width: 1%; white-space: nowrap">
+                            <input 
+                                id="btn-enable-{{ su.servico.id }}"
+                                type="checkbox" 
+                                data-on-color="success" 
+                                data-off-color="default"
+                                data-on-text="On"
+                                data-off-text="Off"
+                                data-id="{{ su.servico.id }}"
+                                {% if su.status == 1 %}checked{% endif %}>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div id="tab-triagem" class="tab-pane">
+            <form id="form-triagem" role="form" onsubmit="return false">
+                <fieldset>
+                    <legend>{% trans %}Impresión{% endtrans %}</legend>
+                    <div class="checkbox">
+                        <label for="impressao">
+                            <input id="impressao" name="impressao" type="checkbox" value="1" {% if unidade.statusImpressao %}checked="checked"{% endif %}
+                                   onclick="setTimeout(SGA.Unidade.Triagem.salvar, 100)" />
+                            {% trans %}Activar impresión de código{% endtrans %}
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="mensagem" class="form-label">{% trans %}Mensage{% endtrans %}</label>
+                        <input type="text" id="mensagem" name="mensagem" class="form-control" maxlength="100" value="{{ unidade.mensagemImpressao }}"
+                               onchange="SGA.Unidade.Triagem.salvar()" />
+                    </div>
+                    <div class="form-group">
+                        <label>{% trans %}Reiniciar códigos{% endtrans %}</label>
+                        <button class="btn btn-danger" onclick="return SGA.Unidade.Triagem.reiniciarSenhas('{% trans %}Deseja realmente reiniciar as senhas?{% endtrans %}')">
+                            {% trans %}Reiniciar{% endtrans %}
+                        </button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+
+{# reiniciar #}
+<div id="dialog-reiniciar" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">{% trans %}Configuración{% endtrans %}</h4>
+            </div>
+            <div class="modal-body">
+                <p>{% trans %}Iniciales reiniciadas con exito{% endtrans %}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans %}Guardar{% endtrans %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

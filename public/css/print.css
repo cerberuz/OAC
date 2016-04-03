@@ -1,0 +1,40 @@
+/**
+ * Novo SGA - Triagem Impressão de senha
+ * @author Rogerio Lino <rogeriolino@gmail.com>
+ */
+ 
+#senha {
+    width: 300px;
+    height: 250px;
+    margin: auto;
+    text-align: center;
+    background: #ffffff;
+}
+
+#senha #senha-header {
+    font-size: 20pt;
+    text-align: center;
+}
+
+#senha #senha-header .data {
+    font-size: 24pt;
+}
+
+#senha #senha-body {
+    font-size: 100pt;
+    line-height: 100pt;
+    font-weight: bolder;
+    text-align: center;
+}
+
+#senha  #senha-body .descricao {
+    text-align: center;
+    font-size: 30pt;
+    line-height: 30pt;
+    display: block;
+}
+
+#senha #senha-footer {
+    font-size: 16pt;
+    text-align: center;
+}

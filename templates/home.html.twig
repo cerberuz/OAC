@@ -1,0 +1,47 @@
+{% extends "main.html.twig" %}
+{% block content %}
+<div id="home">
+    <div class="welcome">
+        <h1>{% trans %}Bienvenido, {{ usuario }}{% endtrans %}</h1>
+        <p>{% trans %}OAC sistema, Sistema de control de Atendimientos basado en web.{% endtrans %}</p>
+    </div>
+    <div id="modules">
+        <div id="modules-search">
+            <input id="search-input" type="text" placeholder="{% trans %}buscar{% endtrans %}" onkeyup="SGA.Home.filter()" class="form-control" />
+            <script type="text/javascript"> document.getElementById('search-input').focus() </script>
+        </div>
+        {% if unidade and modulosUnidade %}
+        <div class="list unidade">
+            <h2>Unidades</h2>
+            <p>{% trans %} Visualice abajo los módulos disponibles para su unidad{% endtrans %}</p>
+            <ul>
+                {% for modulo in modulosUnidade %}
+                <li>
+                    <a href="{{ baseUrl() }}/modules/{{ modulo.chave }}">
+                        <img src="{{ resources('images/icon.png', modulo.chave) }}" />
+                        <span class="name">{{ modulo.nome }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        {% if modulosGlobal %}
+        <div class="list global">
+            <h2>{% trans %} Global {% endtrans %}</h2>
+            <p>{% trans %}Visualice abajo los módulos globales disponibles que usted accesa{% endtrans %}</p>
+            <ul>
+                {% for modulo in modulosGlobal %}
+                <li>
+                    <a href="{{ baseUrl() }}/modules/{{ modulo.chave }}">
+                        <img src="{{ resources('images/icon.png', modulo.chave) }}"/>
+                        <span class="name">{{ modulo.nome }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
